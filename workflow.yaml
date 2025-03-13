@@ -1,0 +1,40 @@
+# Return an array
+- define:
+    assign:
+        - listVar: []
+#
+- randomgenFunction:
+    call: http.get
+    args:
+        url: https://us-central1-cloudworkflow-452808.cloudfunctions.net/randomgen
+    result: randomgenResult
+# - returnStep:
+#     return: ${randomgenResult}
+# for loop to concurrently process each request
+# todo make it parallel
+- parallelProcess:
+    parallel:
+        shared: [listVar]
+        for:
+            value: random_integer
+            in: ${randomgenResult.body}
+            steps:
+                - multiplyFunction:
+                    call: http.post
+                    args:
+                        url: https://us-central1-cloudworkflow-452808.cloudfunctions.net/multiply
+                        body:
+                            input: ${random_integer}
+                    result: multiplyResult
+                - logFunction:
+                    call: http.get
+                    args:
+                        url: https://api.mathjs.org/v4/
+                        query:
+                            expr: ${"log(" + string(multiplyResult.body.multiplied) + ")"}
+                    result: logResult
+                - appendResult:
+                    assign:
+                        - listVar: ${list.concat(listVar, logResult.body)}
+- returnStep:
+    return: ${listVar}
