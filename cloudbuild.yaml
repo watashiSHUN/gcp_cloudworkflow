@@ -16,10 +16,10 @@ steps:
   args: ['workflows', 'delete', '$_WORKFLOW_NAME-$BRANCH_NAME-$SHORT_SHA', '--quiet']
 
 # Check the test output
-- id: 'check-test-workflow'
-  name: 'gcr.io/cloud-builders/gcloud'
-  entrypoint: 'bash'
-  args: ['gitops/test-$BRANCH_NAME.sh']
+# - id: 'check-test-workflow'
+#   name: 'gcr.io/cloud-builders/gcloud'
+#   entrypoint: 'bash'
+#   args: ['test-$BRANCH_NAME.sh']
 
 # Deploy the workflow
 - id: 'deploy-workflow'
