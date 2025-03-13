@@ -25,3 +25,5 @@ steps:
 - id: 'deploy-workflow'
   name: 'gcr.io/cloud-builders/gcloud'
   args: ['workflows', 'deploy', '$_WORKFLOW_NAME-$BRANCH_NAME', '--source', 'gitops/workflow.yaml']
+options:
+  defaultLogsBucketBehavior: REGIONAL_USER_OWNED_BUCKET
